@@ -1,0 +1,32 @@
+<ion-header>
+  <ion-navbar>
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    <ion-title>TodoMVC</ion-title>
+  </ion-navbar>
+</ion-header>
+
+<ion-content padding>
+  <ion-list>
+    <ion-item>
+      <ion-toggle (tap)="changeAll()" item-start></ion-toggle>
+      <ion-input
+        [placeholder]="'What neet to be done?'"
+        [(ngModel)]="task.nome"
+        (keypress)="add($event)" item-end></ion-input>
+    </ion-item>
+  </ion-list>
+
+  <ion-list>
+    <ion-item *ngFor="let item of lista; index as i">
+      <ion-toggle [(ngModel)]="item.estado" item-start></ion-toggle>
+      <ion-label [ngClass]="item.estado?'item-md-disabled':'item-md'">{{item.nome}}</ion-label>
+      <button ion-button clear (click)="remove(i)" item-end>
+        <ion-icon name="close"></ion-icon>
+      </button>
+    </ion-item>
+  </ion-list>
+
+  
+</ion-content>
