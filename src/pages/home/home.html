@@ -16,7 +16,7 @@
   </ion-list>
 
   <ion-list>
-    <ion-item *ngFor="let item of lista; index as i">
+    <ion-item *ngFor="let item of lista; index as i" [hidden]="estado=='todos' || (item.ativo && estado=='ativos')">
       <ion-toggle [(ngModel)]="item.ativo" item-start></ion-toggle>
       <ion-label [ngClass]="item.ativo?'item-md-disabled':'item-md'">{{item.nome}}</ion-label>
       <button ion-button clear (click)="remove(i)" item-end>

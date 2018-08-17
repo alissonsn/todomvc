@@ -72,7 +72,6 @@ var HomePage = /** @class */ (function () {
         if (event.key == "Enter") {
             if (this.task.nome != undefined && this.task.nome.length > 0) {
                 this.db.handleTasks().add(this.task);
-                this.lista = this.db.handleTasks().list();
                 this.processa();
                 this.task = new __WEBPACK_IMPORTED_MODULE_3__model_task_model__["a" /* TaskModel */]();
                 this.task.ativo = false;
@@ -84,8 +83,11 @@ var HomePage = /** @class */ (function () {
         this.processa();
     };
     HomePage.prototype.change = function (index) {
-        var task = this.db.handleTasks().list()[index];
-        task.ativo = !task.ativo;
+        this.db.handleTasks().list().forEach(function (item, indexOf) {
+            if (indexOf == index) {
+                item.ativo = !item.ativo;
+            }
+        });
         this.processa();
     };
     HomePage.prototype.changeAll = function () {
@@ -109,7 +111,7 @@ var HomePage = /** @class */ (function () {
     };
     HomePage.prototype.ativos = function () {
         this.estado = "ativos";
-        this.lista = this.lista.filter(function (t) { return !t.ativo; });
+        this.lista = this.db.handleTasks().list().filter(function (t) { return !t.ativo; });
     };
     HomePage.prototype.todos = function () {
         this.estado = "todos";
@@ -120,7 +122,7 @@ var HomePage = /** @class */ (function () {
         this.lista = this.db.handleTasks().list().filter(function (t) { return t.ativo; });
     };
     HomePage.prototype.limparCompletos = function () {
-        var completos = this.lista.filter(function (t) { return t.ativo; });
+        var completos = this.db.handleTasks().list().filter(function (t) { return t.ativo; });
         this.db.handleTasks().removeCompleted(completos);
         this.processa();
     };
@@ -129,7 +131,7 @@ var HomePage = /** @class */ (function () {
     };
     HomePage = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
-            selector: 'page-home',template:/*ion-inline-start:"D:\Users\f897604\todomvc\src\pages\home\home.html"*/'<ion-header>\n  <ion-navbar>\n    <h1 style="text-align: center;">todos</h1>\n  </ion-navbar>\n</ion-header>\n\n<ion-content padding>\n  <ion-list>\n    <ion-item>\n      <ion-toggle (tap)="changeAll()" item-start></ion-toggle>\n      <ion-input\n        [placeholder]="\'What needs to be done?\'"\n        [(ngModel)]="task.nome"\n        (keypress)="add($event)" item-end></ion-input>\n    </ion-item>\n  </ion-list>\n\n  <ion-list>\n    <ion-item *ngFor="let item of lista; index as i">\n      <ion-toggle [(ngModel)]="item.ativo" item-start></ion-toggle>\n      <ion-label [ngClass]="item.ativo?\'item-md-disabled\':\'item-md\'">{{item.nome}}</ion-label>\n      <button ion-button clear (click)="remove(i)" item-end>\n        <ion-icon name="close"></ion-icon>\n      </button>\n    </ion-item>\n  </ion-list>\n\n  <ion-list>\n    <ion-item style="text-align: center;">\n        <button ion-button color="dark" [ngClass]="estado==\'todos\'?\'button-outline-md\':\'button-outline-md-dark\'" (click)="todos()" outline>All</button>\n        <button ion-button color="dark" [ngClass]="estado==\'ativos\'?\'button-outline-md\':\'button-outline-md-dark\'"(click)="ativos()" outline>Active</button>\n        <button ion-button color="dark" [ngClass]="estado==\'completos\'?\'button-outline-md\':\'button-outline-md-dark\'"(click)="completos()" outline>Completed</button>\n        <button *ngIf="hasCompletos()" ion-button color="dark" (click)="limparCompletos()" outline>Clear Completed</button>\n    </ion-item>\n  </ion-list>\n\n  \n</ion-content>\n'/*ion-inline-end:"D:\Users\f897604\todomvc\src\pages\home\home.html"*/
+            selector: 'page-home',template:/*ion-inline-start:"D:\Users\f897604\todomvc\src\pages\home\home.html"*/'<ion-header>\n  <ion-navbar>\n    <h1 style="text-align: center;">todos</h1>\n  </ion-navbar>\n</ion-header>\n\n<ion-content padding>\n  <ion-list>\n    <ion-item>\n      <ion-toggle (tap)="changeAll()" item-start></ion-toggle>\n      <ion-input\n        [placeholder]="\'What needs to be done?\'"\n        [(ngModel)]="task.nome"\n        (keypress)="add($event)" item-end></ion-input>\n    </ion-item>\n  </ion-list>\n\n  <ion-list>\n    <ion-item *ngFor="let item of lista; index as i" [hidden]="estado==\'todos\' || (item.ativo && estado==\'ativos\')">\n      <ion-toggle [(ngModel)]="item.ativo" item-start></ion-toggle>\n      <ion-label [ngClass]="item.ativo?\'item-md-disabled\':\'item-md\'">{{item.nome}}</ion-label>\n      <button ion-button clear (click)="remove(i)" item-end>\n        <ion-icon name="close"></ion-icon>\n      </button>\n    </ion-item>\n  </ion-list>\n\n  <ion-list>\n    <ion-item style="text-align: center;">\n        <button ion-button color="dark" [ngClass]="estado==\'todos\'?\'button-outline-md\':\'button-outline-md-dark\'" (click)="todos()" outline>All</button>\n        <button ion-button color="dark" [ngClass]="estado==\'ativos\'?\'button-outline-md\':\'button-outline-md-dark\'"(click)="ativos()" outline>Active</button>\n        <button ion-button color="dark" [ngClass]="estado==\'completos\'?\'button-outline-md\':\'button-outline-md-dark\'"(click)="completos()" outline>Completed</button>\n        <button *ngIf="hasCompletos()" ion-button color="dark" (click)="limparCompletos()" outline>Clear Completed</button>\n    </ion-item>\n  </ion-list>\n\n  \n</ion-content>\n'/*ion-inline-end:"D:\Users\f897604\todomvc\src\pages\home\home.html"*/
         }),
         __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__providers_database_database__["a" /* DatabaseProvider */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__providers_database_database__["a" /* DatabaseProvider */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["e" /* NavController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["e" /* NavController */]) === "function" && _b || Object])
     ], HomePage);

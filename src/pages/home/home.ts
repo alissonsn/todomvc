@@ -31,7 +31,6 @@ export class HomePage implements OnInit{
     if(event.key=="Enter"){
       if(this.task.nome != undefined && this.task.nome.length > 0){
         this.db.handleTasks().add(this.task)
-        this.lista = this.db.handleTasks().list()
         this.processa();
 
         this.task = new TaskModel()
@@ -46,8 +45,11 @@ export class HomePage implements OnInit{
   }
 
   change(index:number){
-    let task = this.db.handleTasks().list()[index]
-    task.ativo = !task.ativo
+    this.db.handleTasks().list().forEach((item, indexOf)=>{
+      if (indexOf == index) {
+        item.ativo = !item.ativo;
+      }
+    })
     this.processa()
   }
 
@@ -75,7 +77,7 @@ export class HomePage implements OnInit{
 
   ativos() {
     this.estado = "ativos"
-    this.lista = this.lista.filter(t => !t.ativo)
+    this.lista = this.db.handleTasks().list().filter(t => !t.ativo)
   }
 
   todos() {
@@ -89,7 +91,7 @@ export class HomePage implements OnInit{
   }
 
   limparCompletos() {
-    let completos = this.lista.filter(t => t.ativo)
+    let completos = this.db.handleTasks().list().filter(t => t.ativo)
     this.db.handleTasks().removeCompleted(completos)
     this.processa()
   }
