@@ -45,11 +45,8 @@ export class HomePage implements OnInit{
   }
 
   change(index:number){
-    this.db.handleTasks().list().forEach((item, indexOf)=>{
-      if (indexOf == index) {
-        item.ativo = !item.ativo;
-      }
-    })
+    let task = this.db.handleTasks().list()[index]
+    task.ativo = !task.ativo;
     this.processa()
   }
 
@@ -91,13 +88,17 @@ export class HomePage implements OnInit{
   }
 
   limparCompletos() {
-    let completos = this.db.handleTasks().list().filter(t => t.ativo)
-    this.db.handleTasks().removeCompleted(completos)
+    let arrayRef = this.db.handleTasks().list().filter(task => !task.ativo);
+    this.db.handleTasks().set(arrayRef)
     this.processa()
   }
 
   hasCompletos() : boolean {
     return this.db.handleTasks().list().some(t => t.ativo)
+  }
+
+  itemsLeft(): number {
+    return this.db.handleTasks().list().filter(t => !t.ativo).length;
   }
 
 }

@@ -16,7 +16,7 @@
   </ion-list>
 
   <ion-list>
-    <ion-item *ngFor="let item of lista; index as i" [hidden]="estado=='todos' || (item.ativo && estado=='ativos')">
+    <ion-item *ngFor="let item of lista; index as i" [hidden]="item.ativo && estado=='ativos'">
       <ion-toggle [(ngModel)]="item.ativo" item-start></ion-toggle>
       <ion-label [ngClass]="item.ativo?'item-md-disabled':'item-md'">{{item.nome}}</ion-label>
       <button ion-button clear (click)="remove(i)" item-end>
@@ -25,14 +25,27 @@
     </ion-item>
   </ion-list>
 
-  <ion-list>
-    <ion-item style="text-align: center;">
-        <button ion-button color="dark" [ngClass]="estado=='todos'?'button-outline-md':'button-outline-md-dark'" (click)="todos()" outline>All</button>
-        <button ion-button color="dark" [ngClass]="estado=='ativos'?'button-outline-md':'button-outline-md-dark'"(click)="ativos()" outline>Active</button>
-        <button ion-button color="dark" [ngClass]="estado=='completos'?'button-outline-md':'button-outline-md-dark'"(click)="completos()" outline>Completed</button>
-        <button *ngIf="hasCompletos()" ion-button color="dark" (click)="limparCompletos()" outline>Clear Completed</button>
-    </ion-item>
-  </ion-list>
+  <ion-grid>
+    <ion-row>
+        <ion-col>
+          <button ion-button clear>{{itemsLeft()}} items left</button>
+        </ion-col>
+
+        <ion-col>
+            <ion-buttons>
+              <button ion-button color="dark" [ngClass]="estado=='todos'?'button-outline-md':'button-outline-md-dark'" (click)="todos()" outline>All</button>
+              <button ion-button color="dark" [ngClass]="estado=='ativos'?'button-outline-md':'button-outline-md-dark'"(click)="ativos()" outline>Active</button>
+              <button ion-button color="dark" [ngClass]="estado=='completos'?'button-outline-md':'button-outline-md-dark'"(click)="completos()" outline>Completed</button>
+            </ion-buttons>
+        </ion-col>
+        
+        <ion-col>
+            <ion-buttons right>
+              <button *ngIf="hasCompletos()" ion-button color="dark" (click)="limparCompletos()" outline>Clear Completed</button>
+            </ion-buttons>
+        </ion-col>
+    </ion-row>
+  </ion-grid>
 
   
 </ion-content>

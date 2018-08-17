@@ -83,11 +83,8 @@ var HomePage = /** @class */ (function () {
         this.processa();
     };
     HomePage.prototype.change = function (index) {
-        this.db.handleTasks().list().forEach(function (item, indexOf) {
-            if (indexOf == index) {
-                item.ativo = !item.ativo;
-            }
-        });
+        var task = this.db.handleTasks().list()[index];
+        task.ativo = !task.ativo;
         this.processa();
     };
     HomePage.prototype.changeAll = function () {
@@ -122,16 +119,19 @@ var HomePage = /** @class */ (function () {
         this.lista = this.db.handleTasks().list().filter(function (t) { return t.ativo; });
     };
     HomePage.prototype.limparCompletos = function () {
-        var completos = this.db.handleTasks().list().filter(function (t) { return t.ativo; });
-        this.db.handleTasks().removeCompleted(completos);
+        var arrayRef = this.db.handleTasks().list().filter(function (task) { return !task.ativo; });
+        this.db.handleTasks().set(arrayRef);
         this.processa();
     };
     HomePage.prototype.hasCompletos = function () {
         return this.db.handleTasks().list().some(function (t) { return t.ativo; });
     };
+    HomePage.prototype.itemsLeft = function () {
+        return this.db.handleTasks().list().filter(function (t) { return !t.ativo; }).length;
+    };
     HomePage = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
-            selector: 'page-home',template:/*ion-inline-start:"D:\Users\f897604\todomvc\src\pages\home\home.html"*/'<ion-header>\n  <ion-navbar>\n    <h1 style="text-align: center;">todos</h1>\n  </ion-navbar>\n</ion-header>\n\n<ion-content padding>\n  <ion-list>\n    <ion-item>\n      <ion-toggle (tap)="changeAll()" item-start></ion-toggle>\n      <ion-input\n        [placeholder]="\'What needs to be done?\'"\n        [(ngModel)]="task.nome"\n        (keypress)="add($event)" item-end></ion-input>\n    </ion-item>\n  </ion-list>\n\n  <ion-list>\n    <ion-item *ngFor="let item of lista; index as i" [hidden]="estado==\'todos\' || (item.ativo && estado==\'ativos\')">\n      <ion-toggle [(ngModel)]="item.ativo" item-start></ion-toggle>\n      <ion-label [ngClass]="item.ativo?\'item-md-disabled\':\'item-md\'">{{item.nome}}</ion-label>\n      <button ion-button clear (click)="remove(i)" item-end>\n        <ion-icon name="close"></ion-icon>\n      </button>\n    </ion-item>\n  </ion-list>\n\n  <ion-list>\n    <ion-item style="text-align: center;">\n        <button ion-button color="dark" [ngClass]="estado==\'todos\'?\'button-outline-md\':\'button-outline-md-dark\'" (click)="todos()" outline>All</button>\n        <button ion-button color="dark" [ngClass]="estado==\'ativos\'?\'button-outline-md\':\'button-outline-md-dark\'"(click)="ativos()" outline>Active</button>\n        <button ion-button color="dark" [ngClass]="estado==\'completos\'?\'button-outline-md\':\'button-outline-md-dark\'"(click)="completos()" outline>Completed</button>\n        <button *ngIf="hasCompletos()" ion-button color="dark" (click)="limparCompletos()" outline>Clear Completed</button>\n    </ion-item>\n  </ion-list>\n\n  \n</ion-content>\n'/*ion-inline-end:"D:\Users\f897604\todomvc\src\pages\home\home.html"*/
+            selector: 'page-home',template:/*ion-inline-start:"D:\Users\f897604\todomvc\src\pages\home\home.html"*/'<ion-header>\n  <ion-navbar>\n    <h1 style="text-align: center;">todos</h1>\n  </ion-navbar>\n</ion-header>\n\n<ion-content padding>\n  <ion-list>\n    <ion-item>\n      <ion-toggle (tap)="changeAll()" item-start></ion-toggle>\n      <ion-input\n        [placeholder]="\'What needs to be done?\'"\n        [(ngModel)]="task.nome"\n        (keypress)="add($event)" item-end></ion-input>\n    </ion-item>\n  </ion-list>\n\n  <ion-list>\n    <ion-item *ngFor="let item of lista; index as i" [hidden]="item.ativo && estado==\'ativos\'">\n      <ion-toggle [(ngModel)]="item.ativo" item-start></ion-toggle>\n      <ion-label [ngClass]="item.ativo?\'item-md-disabled\':\'item-md\'">{{item.nome}}</ion-label>\n      <button ion-button clear (click)="remove(i)" item-end>\n        <ion-icon name="close"></ion-icon>\n      </button>\n    </ion-item>\n  </ion-list>\n\n  <ion-grid>\n    <ion-row>\n        <ion-col>\n          <button ion-button clear>{{itemsLeft()}} items left</button>\n        </ion-col>\n\n        <ion-col>\n            <ion-buttons>\n              <button ion-button color="dark" [ngClass]="estado==\'todos\'?\'button-outline-md\':\'button-outline-md-dark\'" (click)="todos()" outline>All</button>\n              <button ion-button color="dark" [ngClass]="estado==\'ativos\'?\'button-outline-md\':\'button-outline-md-dark\'"(click)="ativos()" outline>Active</button>\n              <button ion-button color="dark" [ngClass]="estado==\'completos\'?\'button-outline-md\':\'button-outline-md-dark\'"(click)="completos()" outline>Completed</button>\n            </ion-buttons>\n        </ion-col>\n        \n        <ion-col>\n            <ion-buttons right>\n              <button *ngIf="hasCompletos()" ion-button color="dark" (click)="limparCompletos()" outline>Clear Completed</button>\n            </ion-buttons>\n        </ion-col>\n    </ion-row>\n  </ion-grid>\n\n  \n</ion-content>\n'/*ion-inline-end:"D:\Users\f897604\todomvc\src\pages\home\home.html"*/
         }),
         __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__providers_database_database__["a" /* DatabaseProvider */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__providers_database_database__["a" /* DatabaseProvider */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["e" /* NavController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["e" /* NavController */]) === "function" && _b || Object])
     ], HomePage);
@@ -356,23 +356,23 @@ var AbstractRepository = /** @class */ (function () {
                 _this.removeByIndex(index);
             }
         });
-    };
-    AbstractRepository.prototype.removeCompleted = function (completed) {
-        var _this = this;
-        this.rep.forEach(function (item, index) {
-            completed.forEach(function (itemCompleted) {
-                if (itemCompleted.id == item.id) {
-                    console.log("Removendo obj " + itemCompleted.id);
-                    _this.removeByIndex(index);
-                }
-            });
-        });
+        // return new Promise((resolve , reject)=>{     
+        //     this.rep.forEach((item,index)=>{
+        //         if(item == obj){
+        //             this.removeByIndex(index)
+        //             resolve()
+        //         }
+        //     })
+        // })
     };
     AbstractRepository.prototype.removeByIndex = function (index) {
         this.rep.splice(index, 1);
     };
     AbstractRepository.prototype.list = function () {
         return this.rep;
+    };
+    AbstractRepository.prototype.set = function (lista) {
+        this.rep = lista;
     };
     return AbstractRepository;
 }());
@@ -386,44 +386,14 @@ var AbstractRepository = /** @class */ (function () {
 
 "use strict";
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return TaskModel; });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__persistent_model__ = __webpack_require__(277);
-var __extends = (this && this.__extends) || (function () {
-    var extendStatics = Object.setPrototypeOf ||
-        ({ __proto__: [] } instanceof Array && function (d, b) { d.__proto__ = b; }) ||
-        function (d, b) { for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p]; };
-    return function (d, b) {
-        extendStatics(d, b);
-        function __() { this.constructor = d; }
-        d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-    };
-})();
-
-var TaskModel = /** @class */ (function (_super) {
-    __extends(TaskModel, _super);
+var TaskModel = /** @class */ (function () {
     function TaskModel() {
-        var _this = _super !== null && _super.apply(this, arguments) || this;
-        _this.ativo = true;
-        return _this;
+        this.ativo = true;
     }
     return TaskModel;
-}(__WEBPACK_IMPORTED_MODULE_0__persistent_model__["a" /* Persistent */]));
-
-//# sourceMappingURL=task.model.js.map
-
-/***/ }),
-
-/***/ 277:
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return Persistent; });
-var Persistent = /** @class */ (function () {
-    function Persistent() {
-    }
-    return Persistent;
 }());
 
-//# sourceMappingURL=persistent.model.js.map
+//# sourceMappingURL=task.model.js.map
 
 /***/ })
 

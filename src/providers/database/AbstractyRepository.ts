@@ -23,21 +23,18 @@ export class AbstractRepository<T extends Persistent>{
 
     remove(obj:T){
         this.rep.forEach((item,index)=>{
-            if(item==obj){
+            if(item == obj){
                 this.removeByIndex(index)
             }
         })
-    }
-
-    removeCompleted(completed: Array<T>){
-        this.rep.forEach((item,index)=>{
-            completed.forEach(itemCompleted => {
-                if (itemCompleted.id == item.id) {
-                    console.log("Removendo obj " + itemCompleted.id)
-                    this.removeByIndex(index)
-                }
-            })
-        })
+        // return new Promise((resolve , reject)=>{     
+        //     this.rep.forEach((item,index)=>{
+        //         if(item == obj){
+        //             this.removeByIndex(index)
+        //             resolve()
+        //         }
+        //     })
+        // })
     }
 
     removeByIndex(index:number){
@@ -46,5 +43,9 @@ export class AbstractRepository<T extends Persistent>{
 
     list(){
         return this.rep;
+    }
+
+    set(lista: Array<T>){
+        this.rep = lista
     }
 }
