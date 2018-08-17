@@ -25681,3 +25681,7 @@ ion-navbar.toolbar {
 page-home .item-md-disabled {
   color: #f4f4f4;
 }
+
+page-home .input-md-list .input-md {
+  border: 0px;
+}

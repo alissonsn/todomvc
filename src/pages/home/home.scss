@@ -2,4 +2,8 @@ page-home {
     .item-md-disabled{
         color: map-get($colors, light )
     }
+
+    .input-md-list .input-md{
+        border: 0px;
+    }
 }
