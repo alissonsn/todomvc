@@ -1,9 +1,6 @@
 <ion-header>
   <ion-navbar>
-    <button ion-button menuToggle>
-      <ion-icon name="menu"></ion-icon>
-    </button>
-    <ion-title>TodoMVC</ion-title>
+    <h1 style="text-align: center;">todos</h1>
   </ion-navbar>
 </ion-header>
 
@@ -20,11 +17,20 @@
 
   <ion-list>
     <ion-item *ngFor="let item of lista; index as i">
-      <ion-toggle [(ngModel)]="item.estado" item-start></ion-toggle>
-      <ion-label [ngClass]="item.estado?'item-md-disabled':'item-md'">{{item.nome}}</ion-label>
+      <ion-toggle [(ngModel)]="item.ativo" item-start></ion-toggle>
+      <ion-label [ngClass]="item.ativo?'item-md-disabled':'item-md'">{{item.nome}}</ion-label>
       <button ion-button clear (click)="remove(i)" item-end>
         <ion-icon name="close"></ion-icon>
       </button>
+    </ion-item>
+  </ion-list>
+
+  <ion-list>
+    <ion-item style="text-align: center;">
+        <button ion-button color="dark" (click)="todos()" outline>All</button>
+        <button ion-button color="dark" (click)="ativos()" outline>Active</button>
+        <button ion-button color="dark" (click)="completos()" outline>Completed</button>
+        <button *ngIf="hasCompletos()" ion-button color="dark" (click)="limparCompletos()" outline>Clear Completed</button>
     </ion-item>
   </ion-list>
 

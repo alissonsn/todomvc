@@ -11,6 +11,8 @@ export class HomePage implements OnInit{
 
   task: TaskModel
   lista: Array<TaskModel>
+  tasks: Array<TaskModel>
+  estado: string;
   valueall: boolean;
 
   constructor(
@@ -20,9 +22,11 @@ export class HomePage implements OnInit{
 
   ngOnInit(){
     this.task = new TaskModel()
-    this.task.estado = false
+    this.task.ativo = false
     this.valueall = false
+    this.tasks = this.db.handleTasks().list()
     this.lista = this.db.handleTasks().list()
+    this.estado = undefined
   }
 
   add(event){
@@ -31,7 +35,7 @@ export class HomePage implements OnInit{
       this.db.handleTasks().add(this.task)
       // event.target.value = ''
       this.task = new TaskModel()
-      this.task.estado = false;
+      this.task.ativo = false;
     }
   }
 
@@ -41,14 +45,38 @@ export class HomePage implements OnInit{
 
   change(index:number){
     let task = this.db.handleTasks().list()[index]
-    task.estado = !task.estado
+    task.ativo = !task.ativo
   }
 
   changeAll(){
     this.valueall = !this.valueall
     this.db.handleTasks().list().forEach(item=>{
-      item.estado = this.valueall
+      item.ativo = this.valueall
     })
+  }
+
+  ativos() {
+    this.estado = "ativos"
+    this.lista = this.tasks.filter(t => !t.ativo)
+  }
+
+  todos() {
+    this.estado = "todos"
+    this.lista = Object.assign([], this.tasks);
+  }
+
+  completos() {
+    this.estado = "completos"
+    this.lista = this.tasks.filter(t => t.ativo)
+  }
+
+  limparCompletos() {
+    this.tasks = this.tasks.filter(t => !t.ativo)
+    this.lista = this.lista.filter(t => !t.ativo)
+  }
+
+  hasCompletos() : boolean {
+    return this.tasks.some(t => t.ativo)
   }
 
 }
