@@ -96,7 +96,7 @@ var HomePage = /** @class */ (function () {
         var _this = this;
         this.valueall = !this.valueall;
         this.db.handleTasks().list().forEach(function (item) {
-            item.ativo = _this.valueall;
+            item.completa = _this.valueall;
         });
         this.processa();
     };

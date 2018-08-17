@@ -60,7 +60,7 @@ export class HomePage implements OnInit{
   changeAll(){
     this.valueall = !this.valueall
     this.db.handleTasks().list().forEach(item=>{
-      item.ativo = this.valueall
+      item.completa = this.valueall
     })
     this.processa()
   }
