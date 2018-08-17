@@ -3,6 +3,10 @@ import { Injectable } from '@angular/core';
 import { TaskModel } from '../../model/task.model';
 import { AbstractRepository } from './AbstractyRepository';
 
+/**
+ * Fornecedor de dados.
+ * @author Alisson Nascimento
+ */
 @Injectable()
 export class DatabaseProvider {
 

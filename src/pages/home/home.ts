@@ -11,7 +11,6 @@ export class HomePage implements OnInit{
 
   task: TaskModel
   lista: Array<TaskModel>
-  tasks: Array<TaskModel>
   estado: string;
   valueall: boolean;
 
@@ -24,28 +23,32 @@ export class HomePage implements OnInit{
     this.task = new TaskModel()
     this.task.ativo = false
     this.valueall = false
-    this.tasks = this.db.handleTasks().list()
     this.lista = this.db.handleTasks().list()
     this.estado = undefined
   }
 
   add(event){
-    // console.log(event.target.value)
     if(event.key=="Enter"){
-      this.db.handleTasks().add(this.task)
-      // event.target.value = ''
-      this.task = new TaskModel()
-      this.task.ativo = false;
+      if(this.task.nome != undefined && this.task.nome.length > 0){
+        this.db.handleTasks().add(this.task)
+        this.lista = this.db.handleTasks().list()
+        this.processa();
+
+        this.task = new TaskModel()
+        this.task.ativo = false;
+      }
     }
   }
 
   remove(index:number){
     this.db.handleTasks().removeByIndex(index)
+    this.processa()
   }
 
   change(index:number){
     let task = this.db.handleTasks().list()[index]
     task.ativo = !task.ativo
+    this.processa()
   }
 
   changeAll(){
@@ -53,30 +56,46 @@ export class HomePage implements OnInit{
     this.db.handleTasks().list().forEach(item=>{
       item.ativo = this.valueall
     })
+    this.processa()
+  }
+
+  processa() {
+    if (this.estado == "ativos") {
+      this.ativos()
+    }
+
+    if (this.estado == "todos") {
+      this.todos()
+    }
+
+    if (this.estado == "completos") {
+      this.completos()
+    }
   }
 
   ativos() {
     this.estado = "ativos"
-    this.lista = this.tasks.filter(t => !t.ativo)
+    this.lista = this.lista.filter(t => !t.ativo)
   }
 
   todos() {
     this.estado = "todos"
-    this.lista = Object.assign([], this.tasks);
+    this.lista = this.db.handleTasks().list();
   }
 
   completos() {
     this.estado = "completos"
-    this.lista = this.tasks.filter(t => t.ativo)
+    this.lista = this.db.handleTasks().list().filter(t => t.ativo)
   }
 
   limparCompletos() {
-    this.tasks = this.tasks.filter(t => !t.ativo)
-    this.lista = this.lista.filter(t => !t.ativo)
+    let completos = this.lista.filter(t => t.ativo)
+    this.db.handleTasks().removeCompleted(completos)
+    this.processa()
   }
 
   hasCompletos() : boolean {
-    return this.tasks.some(t => t.ativo)
+    return this.db.handleTasks().list().some(t => t.ativo)
   }
 
 }

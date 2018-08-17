@@ -1,5 +1,6 @@
-export class TaskModel{
+import { Persistent } from "./persistent.model";
+
+export class TaskModel extends Persistent {
     nome: string
-    estado: string
     ativo: boolean = true
 }

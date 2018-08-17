@@ -9,7 +9,7 @@
     <ion-item>
       <ion-toggle (tap)="changeAll()" item-start></ion-toggle>
       <ion-input
-        [placeholder]="'What neet to be done?'"
+        [placeholder]="'What needs to be done?'"
         [(ngModel)]="task.nome"
         (keypress)="add($event)" item-end></ion-input>
     </ion-item>
@@ -27,9 +27,9 @@
 
   <ion-list>
     <ion-item style="text-align: center;">
-        <button ion-button color="dark" (click)="todos()" outline>All</button>
-        <button ion-button color="dark" (click)="ativos()" outline>Active</button>
-        <button ion-button color="dark" (click)="completos()" outline>Completed</button>
+        <button ion-button color="dark" [ngClass]="estado=='todos'?'button-outline-md':'button-outline-md-dark'" (click)="todos()" outline>All</button>
+        <button ion-button color="dark" [ngClass]="estado=='ativos'?'button-outline-md':'button-outline-md-dark'"(click)="ativos()" outline>Active</button>
+        <button ion-button color="dark" [ngClass]="estado=='completos'?'button-outline-md':'button-outline-md-dark'"(click)="completos()" outline>Completed</button>
         <button *ngIf="hasCompletos()" ion-button color="dark" (click)="limparCompletos()" outline>Clear Completed</button>
     </ion-item>
   </ion-list>
