@@ -10,6 +10,8 @@ import { AbstractRepository } from './AbstractyRepository';
 @Injectable()
 export class DatabaseProvider {
 
+  apiUrl = "http://localhost:8080"
+
   repository: AbstractRepository<TaskModel>
 
   constructor(public http: HttpClient) {
@@ -17,6 +19,17 @@ export class DatabaseProvider {
   }
 
   handleTasks(){
+    this.getTasks();
     return this.repository;
   }
+
+  getTasks() {
+    return new Promise(resolve => {
+      this.http.get(this.apiUrl)
+        .subscribe(data => {
+          console.log(data);
+        });
+    });
+  }
+
 }
