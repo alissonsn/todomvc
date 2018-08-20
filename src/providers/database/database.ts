@@ -62,6 +62,16 @@ export class DatabaseProvider {
   }
 
   removeManyTask(tasks: Array<TaskModel>) {
+    let ids = tasks.map(t => t.id).join('', )
+    return new Promise((resolve, reject) => {
+      this.http.get(this.apiUrl+'/remover-muitos/'+ids)
+        .toPromise()
+        .then(
+          res => {
+            resolve();
+          }
+        );
+    });
   }
 
 }

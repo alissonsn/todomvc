@@ -55,7 +55,6 @@ export class HomePage implements OnInit{
   change(index:number){
     let task = this.db.handleRepository().list()[index]
     task.completa = !task.completa;
-    this.db.saveTask(task).then(res => this.lista = this.db.handleRepository().list())
     this.processa()
   }
 
@@ -97,9 +96,14 @@ export class HomePage implements OnInit{
   }
 
   limparCompletos() {
-    let arrayRef = this.db.handleRepository().list().filter(task => !task.completa);
-    this.db.handleRepository().set(arrayRef)
-    this.processa()
+    let completas = this.db.handleRepository().list().filter(task => task.completa);
+    let naoCompletas = this.db.handleRepository().list().filter(task => !task.completa);
+    this.db.removeManyTask(completas).then(
+      res => {
+        this.db.handleRepository().set(naoCompletas)
+        this.processa()
+      }
+    )
   }
 
   hasCompletos() : boolean {
