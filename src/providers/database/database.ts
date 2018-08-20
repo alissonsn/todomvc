@@ -35,4 +35,30 @@ export class DatabaseProvider {
     return this.repository;
   }
 
+  saveTask(task: TaskModel) {
+    return new Promise((resolve, reject) => {
+      this.http.post(this.apiUrl, task)
+        .toPromise()
+        .then(
+          res => {
+            this.repository.add(task)
+            resolve();
+          }
+        );
+    });
+  }
+
+  removeTask(task: TaskModel) {
+    return new Promise((resolve, reject) => {
+      this.http.get(this.apiUrl+'/delete/'+task.id)
+        .toPromise()
+        .then(
+          res => {
+            this.repository.remove(task)
+            resolve();
+          }
+        );
+    });
+  }
+
 }

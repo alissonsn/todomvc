@@ -34,7 +34,7 @@ export class HomePage implements OnInit{
       console.log(event);
       if(this.nomeTarefa != undefined && this.nomeTarefa.length > 0){
         this.task.nome = this.nomeTarefa
-        this.db.handleRepository().add(this.task)
+        this.db.saveTask(this.task).then(res => this.lista = this.db.handleRepository().list())
         this.processa()
 
         this.task = new TaskModel()
@@ -47,13 +47,15 @@ export class HomePage implements OnInit{
   }
 
   remove(index:number){
-    this.db.handleRepository().removeByIndex(index)
+    this.db.removeTask(this.db.handleRepository().list()[index]).
+      then(res => this.lista = this.db.handleRepository().list())
     this.processa()
   }
 
   change(index:number){
     let task = this.db.handleRepository().list()[index]
     task.completa = !task.completa;
+    this.db.saveTask(task).then(res => this.lista = this.db.handleRepository().list())
     this.processa()
   }
 
