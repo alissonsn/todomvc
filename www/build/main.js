@@ -142,12 +142,12 @@ var HomePage = /** @class */ (function () {
     };
     HomePage = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
-            selector: 'page-home',template:/*ion-inline-start:"D:\Users\f897604\todomvc\src\pages\home\home.html"*/'<ion-header>\n  <ion-navbar>\n    <h1 style="text-align: center;">todos</h1>\n  </ion-navbar>\n</ion-header>\n\n<ion-content padding>\n  <ion-list>\n    <ion-item>\n      <ion-toggle (tap)="changeAll()" item-start></ion-toggle>\n      <ion-input\n        [placeholder]="\'What needs to be done?\'"\n        [(ngModel)]="nomeTarefa"\n        (keypress)="add($event)" item-end></ion-input>\n    </ion-item>\n  </ion-list>\n\n  <ion-list>\n    <ion-item *ngFor="let item of lista; index as i" [hidden]="item.completa && estado==\'ativos\'">\n      <ion-toggle [(ngModel)]="item.completa" item-start></ion-toggle>\n      <ion-label [ngClass]="item.completa?\'item-md-disabled\':\'item-md\'">{{item.nome}}</ion-label>\n      <button ion-button clear (click)="remove(i)" item-end>\n        <ion-icon name="close"></ion-icon>\n      </button>\n    </ion-item>\n  </ion-list>\n\n  <ion-grid>\n    <ion-row>\n        <ion-col>\n          <button ion-button clear>{{itemsLeft()}} items left</button>\n        </ion-col>\n\n        <ion-col>\n            <ion-buttons>\n              <button ion-button color="dark" [ngClass]="estado==\'todos\'?\'button-outline-md\':\'button-outline-md-dark\'" (click)="todos()" outline>All</button>\n              <button ion-button color="dark" [ngClass]="estado==\'ativos\'?\'button-outline-md\':\'button-outline-md-dark\'"(click)="ativos()" outline>Active</button>\n              <button ion-button color="dark" [ngClass]="estado==\'completos\'?\'button-outline-md\':\'button-outline-md-dark\'"(click)="completos()" outline>Completed</button>\n            </ion-buttons>\n        </ion-col>\n        \n        <ion-col>\n            <ion-buttons right>\n              <button *ngIf="hasCompletos()" ion-button color="dark" (click)="limparCompletos()" outline>Clear Completed</button>\n            </ion-buttons>\n        </ion-col>\n    </ion-row>\n  </ion-grid>\n\n  \n</ion-content>\n'/*ion-inline-end:"D:\Users\f897604\todomvc\src\pages\home\home.html"*/
+            selector: 'page-home',template:/*ion-inline-start:"/home/alissonsn/git/todomvc/src/pages/home/home.html"*/'<ion-header>\n  <ion-navbar>\n    <h1 style="text-align: center;">todos</h1>\n  </ion-navbar>\n</ion-header>\n\n<ion-content padding>\n  <ion-list>\n    <ion-item>\n      <ion-toggle (tap)="changeAll()" item-start></ion-toggle>\n      <ion-input\n        [placeholder]="\'What needs to be done?\'"\n        [(ngModel)]="nomeTarefa"\n        (keypress)="add($event)" item-end></ion-input>\n    </ion-item>\n  </ion-list>\n\n  <ion-list>\n    <ion-item *ngFor="let item of lista; index as i" [hidden]="item.completa && estado==\'ativos\'">\n      <ion-toggle [(ngModel)]="item.completa" item-start></ion-toggle>\n      <ion-label [ngClass]="item.completa?\'item-md-disabled\':\'item-md\'">{{item.nome}}</ion-label>\n      <button ion-button clear (click)="remove(i)" item-end>\n        <ion-icon name="close"></ion-icon>\n      </button>\n    </ion-item>\n  </ion-list>\n\n  <ion-grid>\n    <ion-row>\n        <ion-col>\n          <button ion-button clear>{{itemsLeft()}} items left</button>\n        </ion-col>\n\n        <ion-col>\n            <ion-buttons>\n              <button ion-button color="dark" [ngClass]="estado==\'todos\'?\'button-outline-md\':\'button-outline-md-dark\'" (click)="todos()" outline>All</button>\n              <button ion-button color="dark" [ngClass]="estado==\'ativos\'?\'button-outline-md\':\'button-outline-md-dark\'"(click)="ativos()" outline>Active</button>\n              <button ion-button color="dark" [ngClass]="estado==\'completos\'?\'button-outline-md\':\'button-outline-md-dark\'"(click)="completos()" outline>Completed</button>\n            </ion-buttons>\n        </ion-col>\n        \n        <ion-col>\n            <ion-buttons right>\n              <button *ngIf="hasCompletos()" ion-button color="dark" (click)="limparCompletos()" outline>Clear Completed</button>\n            </ion-buttons>\n        </ion-col>\n    </ion-row>\n  </ion-grid>\n\n  \n</ion-content>\n'/*ion-inline-end:"/home/alissonsn/git/todomvc/src/pages/home/home.html"*/
         }),
-        __metadata("design:paramtypes", [typeof (_a = typeof __WEBPACK_IMPORTED_MODULE_2__providers_database_database__["a" /* DatabaseProvider */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_2__providers_database_database__["a" /* DatabaseProvider */]) === "function" && _a || Object, typeof (_b = typeof __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["e" /* NavController */] !== "undefined" && __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["e" /* NavController */]) === "function" && _b || Object])
+        __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_2__providers_database_database__["a" /* DatabaseProvider */],
+            __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["e" /* NavController */]])
     ], HomePage);
     return HomePage;
-    var _a, _b;
 }());
 
 //# sourceMappingURL=home.js.map
@@ -212,13 +212,15 @@ var DatabaseProvider = /** @class */ (function () {
     DatabaseProvider.prototype.removeTask = function (task) {
         var _this = this;
         return new Promise(function (resolve, reject) {
-            _this.http.get(_this.apiUrl + '/delete/' + task.id)
+            _this.http.get(_this.apiUrl + '/remover/' + task.id)
                 .toPromise()
                 .then(function (res) {
                 _this.repository.remove(task);
                 resolve();
             });
         });
+    };
+    DatabaseProvider.prototype.removeManyTask = function (tasks) {
     };
     DatabaseProvider = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["A" /* Injectable */])(),
@@ -369,7 +371,7 @@ var MyApp = /** @class */ (function () {
         __metadata("design:type", __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["d" /* Nav */])
     ], MyApp.prototype, "nav", void 0);
     MyApp = __decorate([
-        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({template:/*ion-inline-start:"D:\Users\f897604\todomvc\src\app\app.html"*/'<ion-menu [content]="content">\n  <ion-header>\n    <ion-toolbar>\n      <ion-title>Menu</ion-title>\n    </ion-toolbar>\n  </ion-header>\n\n  <ion-content>\n    <ion-list>\n      <button menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)">\n        {{p.title}}\n      </button>\n    </ion-list>\n  </ion-content>\n\n</ion-menu>\n\n<!-- Disable swipe-to-go-back because it\'s poor UX to combine STGB with side menus -->\n<ion-nav [root]="rootPage" #content swipeBackEnabled="false"></ion-nav>'/*ion-inline-end:"D:\Users\f897604\todomvc\src\app\app.html"*/
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({template:/*ion-inline-start:"/home/alissonsn/git/todomvc/src/app/app.html"*/'<ion-menu [content]="content">\n  <ion-header>\n    <ion-toolbar>\n      <ion-title>Menu</ion-title>\n    </ion-toolbar>\n  </ion-header>\n\n  <ion-content>\n    <ion-list>\n      <button menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)">\n        {{p.title}}\n      </button>\n    </ion-list>\n  </ion-content>\n\n</ion-menu>\n\n<!-- Disable swipe-to-go-back because it\'s poor UX to combine STGB with side menus -->\n<ion-nav [root]="rootPage" #content swipeBackEnabled="false"></ion-nav>'/*ion-inline-end:"/home/alissonsn/git/todomvc/src/app/app.html"*/
         }),
         __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["f" /* Platform */], __WEBPACK_IMPORTED_MODULE_2__ionic_native_status_bar__["a" /* StatusBar */], __WEBPACK_IMPORTED_MODULE_3__ionic_native_splash_screen__["a" /* SplashScreen */]])
     ], MyApp);

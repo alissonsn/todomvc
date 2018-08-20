@@ -50,7 +50,7 @@ export class DatabaseProvider {
 
   removeTask(task: TaskModel) {
     return new Promise((resolve, reject) => {
-      this.http.get(this.apiUrl+'/delete/'+task.id)
+      this.http.get(this.apiUrl+'/remover/'+task.id)
         .toPromise()
         .then(
           res => {
@@ -59,6 +59,9 @@ export class DatabaseProvider {
           }
         );
     });
+  }
+
+  removeManyTask(tasks: Array<TaskModel>) {
   }
 
 }
