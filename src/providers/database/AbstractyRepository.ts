@@ -12,12 +12,6 @@ export class AbstractRepository<T extends Persistent>{
     }
 
     add(obj:T){
-        if (obj.id == undefined || obj.id == 0) {
-            let High = Number.MAX_VALUE
-            let Low = Number.MIN_VALUE
-            obj.id =  Math.floor(Math.random() * (1 + High - Low)) + Low
-        }
-        console.log("Adicionando obj " + obj.id)
         this.rep.push(obj)
     }
 
@@ -27,14 +21,6 @@ export class AbstractRepository<T extends Persistent>{
                 this.removeByIndex(index)
             }
         })
-        // return new Promise((resolve , reject)=>{     
-        //     this.rep.forEach((item,index)=>{
-        //         if(item == obj){
-        //             this.removeByIndex(index)
-        //             resolve()
-        //         }
-        //     })
-        // })
     }
 
     removeByIndex(index:number){

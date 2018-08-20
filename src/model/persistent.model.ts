@@ -1,3 +1,3 @@
 export class Persistent {
-    id: number
+    id: string
 }

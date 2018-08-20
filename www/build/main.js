@@ -62,10 +62,11 @@ var HomePage = /** @class */ (function () {
         this.navCtrl = navCtrl;
     }
     HomePage.prototype.ngOnInit = function () {
+        var _this = this;
         this.task = new __WEBPACK_IMPORTED_MODULE_3__model_task_model__["a" /* TaskModel */]();
         this.task.completa = false;
         this.valueall = false;
-        this.lista = this.db.handleTasks().list();
+        this.db.handleTasks().then(function (res) { return _this.lista = _this.db.handleRepository().list(); });
         this.estado = undefined;
         this.nomeTarefa = undefined;
     };
@@ -74,7 +75,7 @@ var HomePage = /** @class */ (function () {
             console.log(event);
             if (this.nomeTarefa != undefined && this.nomeTarefa.length > 0) {
                 this.task.nome = this.nomeTarefa;
-                this.db.handleTasks().add(this.task);
+                this.db.handleRepository().add(this.task);
                 this.processa();
                 this.task = new __WEBPACK_IMPORTED_MODULE_3__model_task_model__["a" /* TaskModel */]();
                 this.task.completa = false;
@@ -84,18 +85,18 @@ var HomePage = /** @class */ (function () {
         }
     };
     HomePage.prototype.remove = function (index) {
-        this.db.handleTasks().removeByIndex(index);
+        this.db.handleRepository().removeByIndex(index);
         this.processa();
     };
     HomePage.prototype.change = function (index) {
-        var task = this.db.handleTasks().list()[index];
+        var task = this.db.handleRepository().list()[index];
         task.completa = !task.completa;
         this.processa();
     };
     HomePage.prototype.changeAll = function () {
         var _this = this;
         this.valueall = !this.valueall;
-        this.db.handleTasks().list().forEach(function (item) {
+        this.db.handleRepository().list().forEach(function (item) {
             item.completa = _this.valueall;
         });
         this.processa();
@@ -113,40 +114,30 @@ var HomePage = /** @class */ (function () {
     };
     HomePage.prototype.ativos = function () {
         this.estado = "ativos";
-        this.lista = this.db.handleTasks().list().filter(function (t) { return !t.completa; });
+        this.lista = this.db.handleRepository().list().filter(function (t) { return !t.completa; });
     };
     HomePage.prototype.todos = function () {
         this.estado = "todos";
-        this.lista = this.db.handleTasks().list();
+        this.lista = this.db.handleRepository().list();
     };
     HomePage.prototype.completos = function () {
         this.estado = "completos";
-        this.lista = this.db.handleTasks().list().filter(function (t) { return t.completa; });
+        this.lista = this.db.handleRepository().list().filter(function (t) { return t.completa; });
     };
     HomePage.prototype.limparCompletos = function () {
-        var arrayRef = this.db.handleTasks().list().filter(function (task) { return !task.completa; });
-        this.db.handleTasks().set(arrayRef);
+        var arrayRef = this.db.handleRepository().list().filter(function (task) { return !task.completa; });
+        this.db.handleRepository().set(arrayRef);
         this.processa();
     };
     HomePage.prototype.hasCompletos = function () {
-        return this.db.handleTasks().list().some(function (t) { return t.completa; });
+        return this.db.handleRepository().list().some(function (t) { return t.completa; });
     };
     HomePage.prototype.itemsLeft = function () {
-        return this.db.handleTasks().list().filter(function (t) { return !t.completa; }).length;
-    };
-    HomePage.prototype.editando = function (index) {
-        this.db.handleTasks().list().forEach(function (item, indexOf) {
-            if (index == indexOf) {
-                item.editando = true;
-            }
-            else {
-                item.editando = false;
-            }
-        });
+        return this.db.handleRepository().list().filter(function (t) { return !t.completa; }).length;
     };
     HomePage = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({
-            selector: 'page-home',template:/*ion-inline-start:"/home/alissonsn/git/todomvc/src/pages/home/home.html"*/'<ion-header>\n  <ion-navbar>\n    <h1 style="text-align: center;">todos</h1>\n  </ion-navbar>\n</ion-header>\n\n<ion-content padding>\n  <ion-list>\n    <ion-item>\n      <ion-toggle (tap)="changeAll()" item-start></ion-toggle>\n      <ion-input\n        [placeholder]="\'What needs to be done?\'"\n        [(ngModel)]="nomeTarefa"\n        (keypress)="add($event)" item-end></ion-input>\n    </ion-item>\n  </ion-list>\n\n  <ion-list>\n    <ion-item *ngFor="let item of lista; index as i" [hidden]="item.completa && estado==\'ativos\'">\n      <ion-toggle [(ngModel)]="item.completa" item-start></ion-toggle>\n      <ion-label [ngClass]="item.completa?\'item-md-disabled\':\'item-md\'">{{item.nome}}</ion-label>\n      <button ion-button clear (click)="remove(i)" item-end>\n        <ion-icon name="close"></ion-icon>\n      </button>\n    </ion-item>\n  </ion-list>\n\n  <ion-grid>\n    <ion-row>\n        <ion-col>\n          <button ion-button clear>{{itemsLeft()}} items left</button>\n        </ion-col>\n\n        <ion-col>\n            <ion-buttons>\n              <button ion-button color="dark" [ngClass]="estado==\'todos\'?\'button-outline-md\':\'button-outline-md-dark\'" (click)="todos()" outline>All</button>\n              <button ion-button color="dark" [ngClass]="estado==\'ativos\'?\'button-outline-md\':\'button-outline-md-dark\'"(click)="ativos()" outline>Active</button>\n              <button ion-button color="dark" [ngClass]="estado==\'completos\'?\'button-outline-md\':\'button-outline-md-dark\'"(click)="completos()" outline>Completed</button>\n            </ion-buttons>\n        </ion-col>\n        \n        <ion-col>\n            <ion-buttons right>\n              <button *ngIf="hasCompletos()" ion-button color="dark" (click)="limparCompletos()" outline>Clear Completed</button>\n            </ion-buttons>\n        </ion-col>\n    </ion-row>\n  </ion-grid>\n\n  \n</ion-content>\n'/*ion-inline-end:"/home/alissonsn/git/todomvc/src/pages/home/home.html"*/
+            selector: 'page-home',template:/*ion-inline-start:"D:\Users\f897604\todomvc\src\pages\home\home.html"*/'<ion-header>\n  <ion-navbar>\n    <h1 style="text-align: center;">todos</h1>\n  </ion-navbar>\n</ion-header>\n\n<ion-content padding>\n  <ion-list>\n    <ion-item>\n      <ion-toggle (tap)="changeAll()" item-start></ion-toggle>\n      <ion-input\n        [placeholder]="\'What needs to be done?\'"\n        [(ngModel)]="nomeTarefa"\n        (keypress)="add($event)" item-end></ion-input>\n    </ion-item>\n  </ion-list>\n\n  <ion-list>\n    <ion-item *ngFor="let item of lista; index as i" [hidden]="item.completa && estado==\'ativos\'">\n      <ion-toggle [(ngModel)]="item.completa" item-start></ion-toggle>\n      <ion-label [ngClass]="item.completa?\'item-md-disabled\':\'item-md\'">{{item.nome}}</ion-label>\n      <button ion-button clear (click)="remove(i)" item-end>\n        <ion-icon name="close"></ion-icon>\n      </button>\n    </ion-item>\n  </ion-list>\n\n  <ion-grid>\n    <ion-row>\n        <ion-col>\n          <button ion-button clear>{{itemsLeft()}} items left</button>\n        </ion-col>\n\n        <ion-col>\n            <ion-buttons>\n              <button ion-button color="dark" [ngClass]="estado==\'todos\'?\'button-outline-md\':\'button-outline-md-dark\'" (click)="todos()" outline>All</button>\n              <button ion-button color="dark" [ngClass]="estado==\'ativos\'?\'button-outline-md\':\'button-outline-md-dark\'"(click)="ativos()" outline>Active</button>\n              <button ion-button color="dark" [ngClass]="estado==\'completos\'?\'button-outline-md\':\'button-outline-md-dark\'"(click)="completos()" outline>Completed</button>\n            </ion-buttons>\n        </ion-col>\n        \n        <ion-col>\n            <ion-buttons right>\n              <button *ngIf="hasCompletos()" ion-button color="dark" (click)="limparCompletos()" outline>Clear Completed</button>\n            </ion-buttons>\n        </ion-col>\n    </ion-row>\n  </ion-grid>\n\n  \n</ion-content>\n'/*ion-inline-end:"D:\Users\f897604\todomvc\src\pages\home\home.html"*/
         }),
         __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_2__providers_database_database__["a" /* DatabaseProvider */],
             __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["e" /* NavController */]])
@@ -185,21 +176,22 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var DatabaseProvider = /** @class */ (function () {
     function DatabaseProvider(http) {
         this.http = http;
-        this.apiUrl = "http://localhost:8080";
+        this.apiUrl = "http://localhost:8080/task";
         this.repository = new __WEBPACK_IMPORTED_MODULE_2__AbstractyRepository__["a" /* AbstractRepository */](new Array());
     }
     DatabaseProvider.prototype.handleTasks = function () {
-        this.getTasks();
-        return this.repository;
-    };
-    DatabaseProvider.prototype.getTasks = function () {
         var _this = this;
-        return new Promise(function (resolve) {
+        return new Promise(function (resolve, reject) {
             _this.http.get(_this.apiUrl)
-                .subscribe(function (data) {
-                console.log(data);
+                .toPromise()
+                .then(function (res) {
+                _this.repository = new __WEBPACK_IMPORTED_MODULE_2__AbstractyRepository__["a" /* AbstractRepository */](res);
+                resolve();
             });
         });
+    };
+    DatabaseProvider.prototype.handleRepository = function () {
+        return this.repository;
     };
     DatabaseProvider = __decorate([
         Object(__WEBPACK_IMPORTED_MODULE_1__angular_core__["A" /* Injectable */])(),
@@ -350,7 +342,7 @@ var MyApp = /** @class */ (function () {
         __metadata("design:type", __WEBPACK_IMPORTED_MODULE_1_ionic_angular__["d" /* Nav */])
     ], MyApp.prototype, "nav", void 0);
     MyApp = __decorate([
-        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({template:/*ion-inline-start:"/home/alissonsn/git/todomvc/src/app/app.html"*/'<ion-menu [content]="content">\n  <ion-header>\n    <ion-toolbar>\n      <ion-title>Menu</ion-title>\n    </ion-toolbar>\n  </ion-header>\n\n  <ion-content>\n    <ion-list>\n      <button menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)">\n        {{p.title}}\n      </button>\n    </ion-list>\n  </ion-content>\n\n</ion-menu>\n\n<!-- Disable swipe-to-go-back because it\'s poor UX to combine STGB with side menus -->\n<ion-nav [root]="rootPage" #content swipeBackEnabled="false"></ion-nav>'/*ion-inline-end:"/home/alissonsn/git/todomvc/src/app/app.html"*/
+        Object(__WEBPACK_IMPORTED_MODULE_0__angular_core__["m" /* Component */])({template:/*ion-inline-start:"D:\Users\f897604\todomvc\src\app\app.html"*/'<ion-menu [content]="content">\n  <ion-header>\n    <ion-toolbar>\n      <ion-title>Menu</ion-title>\n    </ion-toolbar>\n  </ion-header>\n\n  <ion-content>\n    <ion-list>\n      <button menuClose ion-item *ngFor="let p of pages" (click)="openPage(p)">\n        {{p.title}}\n      </button>\n    </ion-list>\n  </ion-content>\n\n</ion-menu>\n\n<!-- Disable swipe-to-go-back because it\'s poor UX to combine STGB with side menus -->\n<ion-nav [root]="rootPage" #content swipeBackEnabled="false"></ion-nav>'/*ion-inline-end:"D:\Users\f897604\todomvc\src\app\app.html"*/
         }),
         __metadata("design:paramtypes", [__WEBPACK_IMPORTED_MODULE_1_ionic_angular__["f" /* Platform */], __WEBPACK_IMPORTED_MODULE_2__ionic_native_status_bar__["a" /* StatusBar */], __WEBPACK_IMPORTED_MODULE_3__ionic_native_splash_screen__["a" /* SplashScreen */]])
     ], MyApp);
@@ -375,12 +367,6 @@ var AbstractRepository = /** @class */ (function () {
         this.rep = rep;
     }
     AbstractRepository.prototype.add = function (obj) {
-        if (obj.id == undefined || obj.id == 0) {
-            var High = Number.MAX_VALUE;
-            var Low = Number.MIN_VALUE;
-            obj.id = Math.floor(Math.random() * (1 + High - Low)) + Low;
-        }
-        console.log("Adicionando obj " + obj.id);
         this.rep.push(obj);
     };
     AbstractRepository.prototype.remove = function (obj) {
@@ -390,14 +376,6 @@ var AbstractRepository = /** @class */ (function () {
                 _this.removeByIndex(index);
             }
         });
-        // return new Promise((resolve , reject)=>{     
-        //     this.rep.forEach((item,index)=>{
-        //         if(item == obj){
-        //             this.removeByIndex(index)
-        //             resolve()
-        //         }
-        //     })
-        // })
     };
     AbstractRepository.prototype.removeByIndex = function (index) {
         this.rep.splice(index, 1);
@@ -441,7 +419,6 @@ var TaskModel = /** @class */ (function (_super) {
     function TaskModel() {
         var _this = _super !== null && _super.apply(this, arguments) || this;
         _this.completa = true;
-        _this.editando = false;
         return _this;
     }
     return TaskModel;

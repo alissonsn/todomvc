@@ -10,7 +10,7 @@ import { AbstractRepository } from './AbstractyRepository';
 @Injectable()
 export class DatabaseProvider {
 
-  apiUrl = "http://localhost:8080"
+  apiUrl = "http://localhost:8080/task"
 
   repository: AbstractRepository<TaskModel>
 
@@ -19,17 +19,20 @@ export class DatabaseProvider {
   }
 
   handleTasks(){
-    this.getTasks();
-    return this.repository;
+    return new Promise((resolve, reject) => {
+      this.http.get(this.apiUrl)
+        .toPromise()
+        .then(
+          res => {
+            this.repository = new AbstractRepository<TaskModel>(res as Array<TaskModel>)
+            resolve();
+          }
+        );
+    });
   }
 
-  getTasks() {
-    return new Promise(resolve => {
-      this.http.get(this.apiUrl)
-        .subscribe(data => {
-          console.log(data);
-        });
-    });
+  handleRepository(){
+    return this.repository;
   }
 
 }

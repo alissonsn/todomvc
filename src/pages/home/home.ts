@@ -24,7 +24,7 @@ export class HomePage implements OnInit{
     this.task = new TaskModel()
     this.task.completa = false
     this.valueall = false
-    this.lista = this.db.handleTasks().list()
+    this.db.handleTasks().then(res => this.lista = this.db.handleRepository().list())
     this.estado = undefined
     this.nomeTarefa = undefined
   }
@@ -34,7 +34,7 @@ export class HomePage implements OnInit{
       console.log(event);
       if(this.nomeTarefa != undefined && this.nomeTarefa.length > 0){
         this.task.nome = this.nomeTarefa
-        this.db.handleTasks().add(this.task)
+        this.db.handleRepository().add(this.task)
         this.processa()
 
         this.task = new TaskModel()
@@ -47,19 +47,19 @@ export class HomePage implements OnInit{
   }
 
   remove(index:number){
-    this.db.handleTasks().removeByIndex(index)
+    this.db.handleRepository().removeByIndex(index)
     this.processa()
   }
 
   change(index:number){
-    let task = this.db.handleTasks().list()[index]
+    let task = this.db.handleRepository().list()[index]
     task.completa = !task.completa;
     this.processa()
   }
 
   changeAll(){
     this.valueall = !this.valueall
-    this.db.handleTasks().list().forEach(item=>{
+    this.db.handleRepository().list().forEach(item=>{
       item.completa = this.valueall
     })
     this.processa()
@@ -81,44 +81,31 @@ export class HomePage implements OnInit{
 
   ativos() {
     this.estado = "ativos"
-    this.lista = this.db.handleTasks().list().filter(t => !t.completa)
+    this.lista = this.db.handleRepository().list().filter(t => !t.completa)
   }
 
   todos() {
     this.estado = "todos"
-    this.lista = this.db.handleTasks().list();
+    this.lista = this.db.handleRepository().list();
   }
 
   completos() {
     this.estado = "completos"
-    this.lista = this.db.handleTasks().list().filter(t => t.completa)
+    this.lista = this.db.handleRepository().list().filter(t => t.completa)
   }
 
   limparCompletos() {
-    let arrayRef = this.db.handleTasks().list().filter(task => !task.completa);
-    this.db.handleTasks().set(arrayRef)
+    let arrayRef = this.db.handleRepository().list().filter(task => !task.completa);
+    this.db.handleRepository().set(arrayRef)
     this.processa()
   }
 
   hasCompletos() : boolean {
-    return this.db.handleTasks().list().some(t => t.completa)
+    return this.db.handleRepository().list().some(t => t.completa)
   }
 
   itemsLeft(): number {
-    return this.db.handleTasks().list().filter(t => !t.completa).length;
-  }
-
-  editando(index:number) {
-    this.db.handleTasks().list().forEach(
-      (item, indexOf) => {
-        if (index == indexOf) {
-          item.editando = true
-        }
-        else {
-          item.editando = false
-        }
-      }
-    )
+    return this.db.handleRepository().list().filter(t => !t.completa).length;
   }
 
 }
