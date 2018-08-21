@@ -55,7 +55,8 @@ export class HomePage implements OnInit{
   change(index:number){
     let task = this.db.handleRepository().list()[index]
     task.completa = !task.completa;
-    this.processa()
+    this.db.changeTask(task).
+      then(res => this.processa())
   }
 
   changeAll(){
@@ -101,6 +102,7 @@ export class HomePage implements OnInit{
     this.db.removeManyTask(completas).then(
       res => {
         this.db.handleRepository().set(naoCompletas)
+        this.lista = this.db.handleRepository().list()
         this.processa()
       }
     )
