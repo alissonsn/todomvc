@@ -61,6 +61,19 @@ export class DatabaseProvider {
     });
   }
 
+  changeManyTask(valueall: boolean, tasks: Array<TaskModel>) {
+    let ids = tasks.map(t => t.id).join(',')
+    return new Promise((resolve, reject) => {
+      this.http.get(this.apiUrl+'/alterar-muitos/'+valueall+"/"+ids)
+        .toPromise()
+        .then(
+          res => {
+            resolve();
+          }
+        );
+    });
+  }
+
   removeTask(task: TaskModel) {
     return new Promise((resolve, reject) => {
       this.http.get(this.apiUrl+'/remover/'+task.id)

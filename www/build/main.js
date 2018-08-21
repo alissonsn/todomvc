@@ -99,9 +99,9 @@ var HomePage = /** @class */ (function () {
     HomePage.prototype.changeAll = function () {
         var _this = this;
         this.valueall = !this.valueall;
-        this.db.handleRepository().list().forEach(function (item) {
+        this.db.changeManyTask(this.valueall, this.db.handleRepository().list()).then(function (res) { return _this.db.handleRepository().list().forEach(function (item) {
             item.completa = _this.valueall;
-        });
+        }); });
         this.processa();
     };
     HomePage.prototype.processa = function () {
@@ -217,6 +217,17 @@ var DatabaseProvider = /** @class */ (function () {
         console.log(task);
         return new Promise(function (resolve, reject) {
             _this.http.post(_this.apiUrl, task)
+                .toPromise()
+                .then(function (res) {
+                resolve();
+            });
+        });
+    };
+    DatabaseProvider.prototype.changeManyTask = function (valueall, tasks) {
+        var _this = this;
+        var ids = tasks.map(function (t) { return t.id; }).join(',');
+        return new Promise(function (resolve, reject) {
+            _this.http.get(_this.apiUrl + '/alterar-muitos/' + valueall + "/" + ids)
                 .toPromise()
                 .then(function (res) {
                 resolve();

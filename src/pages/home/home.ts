@@ -59,9 +59,11 @@ export class HomePage implements OnInit{
 
   changeAll(){
     this.valueall = !this.valueall
-    this.db.handleRepository().list().forEach(item=>{
-      item.completa = this.valueall
-    })
+    this.db.changeManyTask(this.valueall, this.db.handleRepository().list()).then(
+      res => this.db.handleRepository().list().forEach(item=>{
+        item.completa = this.valueall
+      })
+    )
     this.processa()
   }
 
