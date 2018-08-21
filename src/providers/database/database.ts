@@ -49,6 +49,7 @@ export class DatabaseProvider {
   }
 
   changeTask(task: TaskModel) {
+    console.log(task);
     return new Promise((resolve, reject) => {
       this.http.post(this.apiUrl, task)
         .toPromise()

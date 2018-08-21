@@ -31,7 +31,6 @@ export class HomePage implements OnInit{
 
   add(event){
     if(event.key=="Enter"){
-      console.log(event);
       if(this.nomeTarefa != undefined && this.nomeTarefa.length > 0){
         this.task.nome = this.nomeTarefa
         this.db.saveTask(this.task).then(res => this.lista = this.db.handleRepository().list())
@@ -55,8 +54,7 @@ export class HomePage implements OnInit{
   change(index:number){
     let task = this.db.handleRepository().list()[index]
     task.completa = !task.completa;
-    this.db.changeTask(task).
-      then(res => this.processa())
+    this.db.changeTask(task).then(res => this.processa())
   }
 
   changeAll(){

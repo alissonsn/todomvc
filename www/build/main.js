@@ -73,7 +73,6 @@ var HomePage = /** @class */ (function () {
     HomePage.prototype.add = function (event) {
         var _this = this;
         if (event.key == "Enter") {
-            console.log(event);
             if (this.nomeTarefa != undefined && this.nomeTarefa.length > 0) {
                 this.task.nome = this.nomeTarefa;
                 this.db.saveTask(this.task).then(function (res) { return _this.lista = _this.db.handleRepository().list(); });
@@ -95,8 +94,7 @@ var HomePage = /** @class */ (function () {
         var _this = this;
         var task = this.db.handleRepository().list()[index];
         task.completa = !task.completa;
-        this.db.changeTask(task).
-            then(function (res) { return _this.processa(); });
+        this.db.changeTask(task).then(function (res) { return _this.processa(); });
     };
     HomePage.prototype.changeAll = function () {
         var _this = this;
@@ -216,6 +214,7 @@ var DatabaseProvider = /** @class */ (function () {
     };
     DatabaseProvider.prototype.changeTask = function (task) {
         var _this = this;
+        console.log(task);
         return new Promise(function (resolve, reject) {
             _this.http.post(_this.apiUrl, task)
                 .toPromise()
